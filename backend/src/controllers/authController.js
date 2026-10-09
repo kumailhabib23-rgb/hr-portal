@@ -553,6 +553,107 @@ const logout = async (req, res) => {
 
 
 /**
+ * PUT /api/auth/password
+ * Change the password for the authenticated account.
+ */
+const changePassword = async (req, res) => {
+    try {
+        const userId = req.user?.id;
+        const {
+            current_password,
+            new_password,
+            confirm_password,
+        } = req.body || {};
+
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "Authentication is required",
+            });
+        }
+
+        if (!current_password || !new_password || !confirm_password) {
+            return res.status(400).json({
+                success: false,
+                message: "Current password, new password and confirmation are required",
+            });
+        }
+
+        if (new_password.length < 8) {
+            return res.status(400).json({
+                success: false,
+                message: "New password must be at least 8 characters long",
+            });
+        }
+
+        if (new_password !== confirm_password) {
+            return res.status(400).json({
+                success: false,
+                message: "New password and confirmation do not match",
+            });
+        }
+
+        const [users] = await pool.execute(
+            "SELECT id, password, status FROM users WHERE id = ? LIMIT 1",
+            [userId]
+        );
+
+        if (users.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "User account not found",
+            });
+        }
+
+        if (users[0].status !== "Active") {
+            return res.status(403).json({
+                success: false,
+                message: "Your account is not active",
+            });
+        }
+
+        const currentPasswordMatches = await bcrypt.compare(
+            current_password,
+            users[0].password
+        );
+
+        if (!currentPasswordMatches) {
+            return res.status(401).json({
+                success: false,
+                message: "Current password is incorrect",
+            });
+        }
+
+        if (await bcrypt.compare(new_password, users[0].password)) {
+            return res.status(400).json({
+                success: false,
+                message: "New password must be different from current password",
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(new_password, 10);
+        await pool.execute(
+            "UPDATE users SET password = ? WHERE id = ?",
+            [hashedPassword, userId]
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Password changed successfully",
+        });
+    } catch (error) {
+        console.error("Change password error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Unable to change password",
+            error: error.message,
+        });
+    }
+};
+
+
+/**
  * Export controllers
  */
 module.exports = {
@@ -561,4 +662,5 @@ module.exports = {
     employeeLogin,
     getMe,
     logout,
+    changePassword,
 };

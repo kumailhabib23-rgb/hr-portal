@@ -188,30 +188,30 @@ const apiRequest = async (endpoint, options = {}) => {
 
 const statusStyles = {
   Present: {
-    text: "text-emerald-400",
+    text: "text-emerald-700 dark:text-emerald-400",
     bg: "bg-emerald-500/10",
     border: "border-emerald-500/20",
     dot: "bg-emerald-400",
   },
 
   Late: {
-    text: "text-amber-400",
+    text: "text-amber-700 dark:text-amber-400",
     bg: "bg-amber-500/10",
     border: "border-amber-500/20",
     dot: "bg-amber-400",
   },
 
   Absent: {
-    text: "text-red-400",
+    text: "text-red-700 dark:text-red-400",
     bg: "bg-red-500/10",
     border: "border-red-500/20",
     dot: "bg-red-400",
   },
 
   "Not Marked": {
-    text: "text-slate-400",
-    bg: "bg-white/5",
-    border: "border-white/10",
+    text: "text-slate-600 dark:text-slate-400",
+    bg: "bg-slate-100 dark:bg-white/5",
+    border: "border-slate-200 dark:border-white/10",
     dot: "bg-slate-500",
   },
 };
@@ -234,7 +234,7 @@ function StatCard({
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.045] p-5 shadow-xl backdrop-blur-xl">
+    <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-xl dark:border-white/10 dark:bg-white/[0.045]">
       <div
         className={`absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gradient-to-br ${config[type]} opacity-10 blur-2xl`}
       />
@@ -246,11 +246,11 @@ function StatCard({
           <Icon size={20} />
         </div>
 
-        <p className="mt-5 text-xs text-slate-500">
+        <p className="mt-5 text-xs text-slate-500 dark:text-slate-500">
           {title}
         </p>
 
-        <h2 className="mt-1 text-3xl font-bold text-white">
+        <h2 className="mt-1 text-3xl font-bold text-slate-900 dark:text-white">
           {value}
         </h2>
       </div>
@@ -723,7 +723,7 @@ export default function Attendance() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#070b14] text-white">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-900 dark:bg-[#070b14] dark:text-white">
         <div className="text-center">
           <Loader2
             size={35}
@@ -743,17 +743,17 @@ export default function Attendance() {
   ===================================================== */
 
   return (
-    <div className="min-h-screen bg-[#070b14] p-4 text-white sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-slate-50 p-4 text-slate-900 dark:bg-[#070b14] dark:text-white sm:p-6 lg:p-8">
       <div className="mx-auto max-w-[1500px]">
 
         {/* HEADER */}
 
         <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <div className="mb-3 flex items-center gap-2 text-xs text-slate-600">
+            <div className="mb-3 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-600">
               <span>HR Portal</span>
               <ChevronRight size={13} />
-              <span className="text-slate-400">
+              <span className="text-slate-700 dark:text-slate-400">
                 Attendance
               </span>
             </div>
@@ -774,7 +774,7 @@ export default function Attendance() {
                   </span>
                 </div>
 
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-slate-600 dark:text-slate-500">
                   Monitor employee attendance,
                   check-ins and locations.
                 </p>
@@ -782,18 +782,18 @@ export default function Attendance() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.045] px-4 py-3 backdrop-blur-xl">
+          <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-white/10 dark:bg-white/[0.045]">
             <CalendarDays
               size={18}
               className="text-blue-400"
             />
 
             <div>
-              <p className="text-[9px] uppercase text-slate-600">
+              <p className="text-[9px] uppercase text-slate-500 dark:text-slate-600">
                 Today
               </p>
 
-              <p className="text-sm font-semibold text-slate-200">
+              <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                 {formatDate(today)}
               </p>
             </div>
@@ -803,7 +803,7 @@ export default function Attendance() {
                 loadData(true)
               }
               disabled={refreshing}
-              className="ml-3 flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white"
+              className="ml-3 flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:border-white/10 dark:bg-white/5 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
             >
               <RefreshCw
                 size={15}
@@ -889,7 +889,7 @@ export default function Attendance() {
                     selectedDepartment ===
                     department
                       ? "border-blue-500/30 bg-blue-600 text-white"
-                      : "border-white/10 bg-white/[0.04] text-slate-500 hover:bg-white/[0.08] hover:text-white"
+                      : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-400 dark:hover:bg-white/[0.08] dark:hover:text-white"
                   }`}
                 >
                   <Users
@@ -906,25 +906,25 @@ export default function Attendance() {
 
         {/* TABLE */}
 
-        <section className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] backdrop-blur-xl">
+        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-white/10 dark:bg-white/[0.035]">
 
           {/* TABLE HEADER */}
 
-          <div className="flex flex-col gap-4 border-b border-white/10 p-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-4 border-b border-slate-200 p-5 dark:border-white/10 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <h2 className="text-lg font-bold">
                 {selectedDepartment}
               </h2>
 
-              <p className="mt-1 text-xs text-slate-600">
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-600">
                 {filteredEmployees.length} employees
               </p>
             </div>
 
-            <div className="flex h-11 items-center rounded-xl border border-white/10 bg-white/[0.035] px-3">
+            <div className="flex h-11 items-center rounded-xl border border-slate-200 bg-slate-50 px-3 dark:border-white/10 dark:bg-white/[0.035]">
               <Search
                 size={16}
-                className="mr-2 text-slate-600"
+                className="mr-2 text-slate-500 dark:text-slate-600"
               />
 
               <input
@@ -935,7 +935,7 @@ export default function Attendance() {
                   )
                 }
                 placeholder="Search employee..."
-                className="w-full bg-transparent text-xs text-white outline-none placeholder:text-slate-700 sm:w-64"
+                className="w-full bg-transparent text-xs text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-600 sm:w-64"
               />
             </div>
           </div>
@@ -945,7 +945,7 @@ export default function Attendance() {
           <div className="hidden overflow-x-auto lg:block">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-white/10 text-left">
+                <tr className="border-b border-slate-200 text-left dark:border-white/10">
                   <th className="px-6 py-4 text-[9px] uppercase text-slate-600">
                     Employee
                   </th>

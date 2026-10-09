@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../utils/auth";
+import { getToken, logout } from "../utils/auth";
 import {
   Bell,
   ChevronDown,
@@ -18,6 +18,30 @@ import {
 
 import { useTheme } from "../context/useTheme";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+const notificationTone = {
+  Info: "bg-blue-500",
+  Success: "bg-emerald-500",
+  Warning: "bg-amber-500",
+  Error: "bg-rose-500",
+};
+
+const formatNotificationTime = (value) => {
+  const timestamp = new Date(value).getTime();
+  if (Number.isNaN(timestamp)) return "Just now";
+
+  const minutes = Math.floor(Math.max(0, Date.now() - timestamp) / 60000);
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes} min ago`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hr${hours === 1 ? "" : "s"} ago`;
+
+  const days = Math.floor(hours / 24);
+  return `${days} day${days === 1 ? "" : "s"} ago`;
+};
+
 function Header({ onMenuClick }) {
   const { darkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -25,30 +49,95 @@ function Header({ onMenuClick }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [mobileSearch, setMobileSearch] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [notificationsLoading, setNotificationsLoading] = useState(true);
 
   const profileRef = useRef(null);
   const notificationRef = useRef(null);
 
-  const notifications = [
-    {
-      title: "Leave request pending",
-      detail: "Ahmed Khan submitted a leave request.",
-      time: "10 min ago",
-      tone: "bg-amber-500",
-    },
-    {
-      title: "Payroll processed",
-      detail: "August payroll is ready for review.",
-      time: "1 hour ago",
-      tone: "bg-emerald-500",
-    },
-    {
-      title: "New employee added",
-      detail: "Sara Hassan joined the HR department.",
-      time: "Yesterday",
-      tone: "bg-blue-500",
-    },
-  ];
+  useEffect(() => {
+    let active = true;
+
+    const loadNotifications = async () => {
+      const token = getToken();
+      if (!token) {
+        setNotificationsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/api/notifications`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to load notifications");
+        }
+
+        if (active) {
+          setNotifications(data.notifications || []);
+          setUnreadCount(Number(data.unreadCount || 0));
+        }
+      } catch (error) {
+        console.error("Notification loading error:", error);
+      } finally {
+        if (active) setNotificationsLoading(false);
+      }
+    };
+
+    loadNotifications();
+    const interval = window.setInterval(loadNotifications, 30000);
+
+    return () => {
+      active = false;
+      window.clearInterval(interval);
+    };
+  }, []);
+
+  const markNotificationRead = async (notification) => {
+    if (notification.is_read) return;
+
+    try {
+      const response = await fetch(
+        `${API_URL}/api/notifications/${notification.id}/read`,
+        {
+          method: "PUT",
+          headers: { Authorization: `Bearer ${getToken()}` },
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to update notification");
+
+      setNotifications((current) =>
+        current.map((item) =>
+          item.id === notification.id ? { ...item, is_read: 1 } : item
+        )
+      );
+      setUnreadCount((count) => Math.max(0, count - 1));
+    } catch (error) {
+      console.error("Notification update error:", error);
+    }
+  };
+
+  const markAllNotificationsRead = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/notifications/read-all`, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+
+      if (!response.ok) throw new Error("Failed to update notifications");
+
+      setNotifications((current) =>
+        current.map((notification) => ({ ...notification, is_read: 1 }))
+      );
+      setUnreadCount(0);
+    } catch (error) {
+      console.error("Notification update error:", error);
+    }
+  };
 
   /* =====================================
      CLOSE PROFILE WHEN CLICKING OUTSIDE

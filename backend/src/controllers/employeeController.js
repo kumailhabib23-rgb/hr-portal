@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const pool = require("../config/db");
+const { notifyAdmins } = require("../utils/notificationService");
 
 /*
 |--------------------------------------------------------------------------
@@ -573,6 +574,12 @@ const createEmployee = async (req, res) => {
         */
 
         await connection.commit();
+
+        await notifyAdmins({
+            title: "Employee added",
+            message: `${first_name} ${last_name} joined the company.`,
+            type: "Info",
+        });
 
 
         /*

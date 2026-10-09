@@ -339,7 +339,7 @@ export default function Reports() {
 
         <button
           onClick={() => setShowGenerate(true)}
-          className="shared-page-action-button inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+          className="shared-page-action-button flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-700"
         >
           <Plus size={18} />
           Generate Report
@@ -533,7 +533,7 @@ export default function Reports() {
                   placeholder="Search reports..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-emerald-500 focus:bg-white md:w-64"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-indigo-500 focus:bg-white md:w-64"
                 />
               </div>
 
@@ -547,7 +547,7 @@ export default function Reports() {
                 <select
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
-                  className="appearance-none rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-9 text-sm outline-none focus:border-emerald-500"
+                  className="appearance-none rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-9 text-sm outline-none focus:border-indigo-500"
                 >
                   {departments.map((item) => (
                     <option key={item}>{item}</option>
@@ -565,7 +565,7 @@ export default function Reports() {
                 <select
                   value={type}
                   onChange={(e) => setType(e.target.value)}
-                  className="appearance-none rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-4 pr-9 text-sm outline-none focus:border-emerald-500"
+                  className="appearance-none rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-4 pr-9 text-sm outline-none focus:border-indigo-500"
                 >
                   {reportTypes.map((item) => (
                     <option key={item}>{item}</option>
@@ -962,7 +962,7 @@ export default function Reports() {
                       }
                       className={`rounded-xl border px-4 py-3 text-sm font-semibold transition ${
                         generateData.format === format
-                          ? "border-emerald-500 bg-emerald-50 text-emerald-700"
+                          ? "border-indigo-500 bg-indigo-50 text-indigo-700"
                           : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
                       }`}
                     >
@@ -984,7 +984,7 @@ export default function Reports() {
 
               <button
                 onClick={generateReport}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700"
               >
                 <FileBarChart size={17} />
                 Generate Report

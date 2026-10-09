@@ -1,4 +1,8 @@
 const pool = require("../config/db");
+const {
+    notifyAdmins,
+    notifyEmployee,
+} = require("../utils/notificationService");
 
 // ==========================================
 // GET ALL LEAVE REQUESTS
@@ -257,7 +261,7 @@ const createLeave = async (req, res) => {
         const [employees] =
             await pool.execute(
                 `
-                SELECT id, status
+                SELECT id, status, first_name, last_name
                 FROM employees
                 WHERE id = ?
                 LIMIT 1
@@ -357,6 +361,12 @@ const createLeave = async (req, res) => {
                 ]
             );
 
+        await notifyAdmins({
+            title: "Leave request submitted",
+            message: `${employees[0].first_name} ${employees[0].last_name} submitted a ${leave_type} leave request.`,
+            type: "Warning",
+        });
+
         return res.status(201).json({
             success: true,
             message:
@@ -392,6 +402,7 @@ const approveLeave = async (req, res) => {
                 `
                 SELECT
                     id,
+                    employee_id,
                     status
                 FROM leaves
                 WHERE id = ?
@@ -437,6 +448,12 @@ const approveLeave = async (req, res) => {
                     id,
                 ]
             );
+
+        await notifyEmployee(leaves[0].employee_id, {
+            title: "Leave request approved",
+            message: "Your leave request has been approved.",
+            type: "Success",
+        });
 
         return res.status(200).json({
             success: true,
@@ -486,6 +503,7 @@ const rejectLeave = async (req, res) => {
                 `
                 SELECT
                     id,
+                    employee_id,
                     status
                 FROM leaves
                 WHERE id = ?
@@ -532,6 +550,12 @@ const rejectLeave = async (req, res) => {
                     id,
                 ]
             );
+
+        await notifyEmployee(leaves[0].employee_id, {
+            title: "Leave request rejected",
+            message: `Your leave request was rejected. Reason: ${rejection_reason}`,
+            type: "Error",
+        });
 
         return res.status(200).json({
             success: true,

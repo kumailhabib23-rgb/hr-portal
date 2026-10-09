@@ -6,6 +6,7 @@ const {
     employeeLogin,
     getMe,
     logout,
+    changePassword,
 } = require("../controllers/authController");
 
 const authMiddleware = require("../middleware/authMiddleware");
@@ -17,6 +18,12 @@ router.post("/register", register);
 router.post("/login", login);
 
 router.post("/employee-login", employeeLogin);
+
+router.put(
+    "/password",
+    authMiddleware,
+    changePassword
+);
 
 router.get(
     "/me",

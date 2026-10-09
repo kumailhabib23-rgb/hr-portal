@@ -30,7 +30,7 @@ function App() {
       <Route
         path="*"
         element={
-          <div className="min-h-screen bg-[#f6f8fc] dark:bg-black">
+          <div className="portal min-h-screen bg-[#f6f8fc] dark:bg-black">
             <Sidebar
               collapsed={collapsed}
               setCollapsed={setCollapsed}
@@ -39,20 +39,22 @@ function App() {
             />
             <main className={`min-h-screen transition-all duration-300 ${collapsed ? "lg:ml-[82px]" : "lg:ml-[270px]"}`}>
               <Header onMenuClick={() => setMobileOpen(true)} />
-              <Routes>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/employees" element={<AllEmployees />} />
-                <Route path="/employees/add" element={<AddEmployee />} />
-                <Route path="/attendance" element={<Attendance />} />
-                <Route path="/leave" element={<LeaveManagement />} />
-                <Route path="/payroll" element={<Payroll />} />
-                <Route path="/departments" element={<Departments />} />
-                <Route path="/performance" element={<Performance />} />
-                <Route path="/reports" element={<Reports />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/documents" element={<Documents />} />
-              </Routes>
+              <div className="content">
+                <Routes>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/employees" element={<AllEmployees />} />
+                  <Route path="/employees/add" element={<AddEmployee />} />
+                  <Route path="/attendance" element={<Attendance />} />
+                  <Route path="/leave" element={<LeaveManagement />} />
+                  <Route path="/payroll" element={<Payroll />} />
+                  <Route path="/departments" element={<Departments />} />
+                  <Route path="/performance" element={<Performance />} />
+                  <Route path="/reports" element={<Reports />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/documents" element={<Documents />} />
+                </Routes>
+              </div>
             </main>
           </div>
         }

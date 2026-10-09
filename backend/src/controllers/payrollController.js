@@ -1,4 +1,5 @@
 const pool = require("../config/db");
+const { notifyAdmins } = require("../utils/notificationService");
 
 /*
 |--------------------------------------------------------------------------
@@ -1270,6 +1271,12 @@ const createPayroll = async (req, res) => {
         */
 
         await connection.commit();
+
+        await notifyAdmins({
+            title: "Payroll created",
+            message: `Payroll for ${employee.first_name} ${employee.last_name} (${payroll_month}) is ready for review.`,
+            type: "Info",
+        });
 
 
         /*

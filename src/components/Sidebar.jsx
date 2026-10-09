@@ -394,7 +394,10 @@ function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
         {/* COLLAPSE */}
 
         <button
+          type="button"
           onClick={() => setCollapsed(!collapsed)}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           className="
             absolute
             -right-3
@@ -406,12 +409,13 @@ function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
             justify-center
             rounded-full
             border
-            border-slate-700
-            bg-slate-900
-            text-slate-400
+            border-indigo-500
+            bg-indigo-600
+            text-white
             shadow-xl
             transition-all
-            hover:bg-indigo-600
+            hover:border-indigo-400
+            hover:bg-indigo-700
             hover:text-white
             lg:flex
           "
